@@ -58,6 +58,10 @@
   <audio id="audio" preload="none"></audio>
 
   <script>
+    /* === Общая база аудио (единый банк файлов) === */
+    const AUDIO_BASE = 'https://ausstellungmw.github.io/Frauen-im-geteilten-Deutschland/assets/audio/';
+    const getAudioUrl = (lang, num) => `${AUDIO_BASE}${lang}/${num}.mp3`;
+
     // Тексты (исправлены артефакты кодировки по смыслу)
     const i18n = {
       de: {
@@ -65,15 +69,15 @@
         subtitle: 'Station 2',
         body: `Ich bin in den 1990er Jahren als Kind in einem Land ohne Mauer aufgewachsen. Die deutsche Teilung war Geschichte. Und doch begegnen einem immer wieder Klischees, die sich bis heute in den Köpfen vieler Menschen über Frauen in Ost- und Westdeutschland halten: Die Westfrau, die mal als Heimchen am Herd, mal als knallharte Karrierefrau beschrieben wird. Die Ostfrau, die im Kohlebergbau „ihren Mann“ steht. Die mal als tough und mal als Rabenmutter bezeichnet wird, weil sie die Kinder in die Krippe gibt. Die Westfrau, die gendert, und die Ostfrau, die damit nichts anzufangen weiß. Die Ostfrau, die als Verliererin der deutschen Einheit gilt … Die Liste der Zuschreibungen ist lang. Und obwohl sie sich teils grotesk widersprechen, zeugen sie doch alle von der Überzeugung, genau zu wissen, wie DIE Ostfrau und DIE Westfrau ticken. Vor allem eines scheint klar zu sein: Sie ticken alle gleich, aber im Vergleich zum jeweils anderen Teil Deutschlands ganz anders. Woher kommen diese Zuschreibungen? Und was ist an ihnen dran?`,
         code: 'DE',
-        audio: 'assets/audio/de/2.mp3',
+        audioNum: 2,
         ariaPlay:'Abspielen', ariaPause:'Pause'
       },
       en: {
         title: 'Typically Eastern – Typically Western?',
         subtitle: 'Station 2',
-        body: `I grew up in the 1990s as a child in a country with no Wall. The division of Germany was history. Yet one still encounters to this day clichés in the minds of many people about women in eastern and western Germany. The western woman is sometimes the mumsy housewife, sometimes the uncompromising career woman. Her eastern counterpart “mans up” in the coal mine and is tough, but is also called a neglectful mother because she drops her children off at the kindergarten every day. The western woman uses gender‑neutral language; the eastern woman does not know where to start with all that. The eastern woman is the loser of German unification … The list of supposed characteristics is long and, although they sometimes contradict themselves, they all nevertheless claim to show exactly what makes the eastern woman and the western woman tick. Above all, one thing appears to be clear: all women behave in the same way, but completely differently to those in the other half of Germany. Where do these supposed characteristics come from? And what do they reveal?`,
+        body: `I grew up in the 1990s as a child in a country with no Wall. The division of Germany was history. Yet one still encounters to this day clichés in the minds of many people about women in eastern and western Germany. The western woman is sometimes the mumsy housewife, sometimes the uncompromising career woman. Her eastern counterpart “mans up” in the coal mine and is tough, but is also called a neglectful mother because she drops her children off at the kindergarten every day. The western woman uses gender-neutral language; the eastern woman does not know where to start with all that. The eastern woman is the loser of German unification … The list of supposed characteristics is long and, although they sometimes contradict themselves, they all nevertheless claim to show exactly what makes the eastern woman and the western woman tick. Above all, one thing appears to be clear: all women behave in the same way, but completely differently to those in the other half of Germany. Where do these supposed characteristics come from? And what do they reveal?`,
         code: 'EN',
-        audio: 'assets/audio/en/2.mp3',
+        audioNum: 2,
         ariaPlay:'Play', ariaPause:'Pause'
       }
     };
@@ -104,11 +108,12 @@
     function toTime(s){ s = Math.max(0, s|0); const m=(s/60)|0, r=(s%60)|0; return `${m}:${r.toString().padStart(2,'0')}` }
 
     function loadAudio(){
-      const a = i18n[lang];
-      audio.src = a.audio; // ожидаемые пути: assets/audio/de/2.mp3 или assets/audio/en/2.mp3
+      const t = i18n[lang];
+      const folder = (lang === 'de') ? 'de' : 'en';
+      audio.src = getAudioUrl(folder, t.audioNum); // напр.: .../assets/audio/de/2.mp3
       audio.load();
       seek.value = 0; seek.max = 100; cur.textContent='0:00'; dur.textContent='0:00';
-      playBtn.textContent='▶'; playBtn.setAttribute('aria-label', a.ariaPlay);
+      playBtn.textContent='▶'; playBtn.setAttribute('aria-label', t.ariaPlay);
     }
 
     playBtn.addEventListener('click', ()=>{
